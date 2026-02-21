@@ -7,12 +7,24 @@ typeset -g __KIMI_CLI_PREFIX_CHAR
 typeset -g __KIMI_CLI_PREFIX
 : "${__KIMI_CLI_PREFIX:="${__KIMI_CLI_PREFIX_CHAR} "}"
 
-typeset -g __KIMI_CLI_PREFIX_ACTIVE=0
-typeset -g __KIMI_CLI_WIDGETS_INSTALLED=0
-typeset -g __KIMI_CLI_HAS_PREV_LINE_INIT=0
-typeset -g __KIMI_CLI_HAS_PREV_LINE_PRE_REDRAW=0
-typeset -g __KIMI_CLI_HAS_PREV_LINE_FINISH=0
-typeset -gA __KIMI_CLI_GUARD_WIDGET_ALIASES=()
+typeset -gi __KIMI_CLI_PREFIX_ACTIVE
+: "${__KIMI_CLI_PREFIX_ACTIVE:=0}"
+
+typeset -gi __KIMI_CLI_WIDGETS_INSTALLED
+: "${__KIMI_CLI_WIDGETS_INSTALLED:=0}"
+
+typeset -gi __KIMI_CLI_HAS_PREV_LINE_INIT
+: "${__KIMI_CLI_HAS_PREV_LINE_INIT:=0}"
+
+typeset -gi __KIMI_CLI_HAS_PREV_LINE_PRE_REDRAW
+: "${__KIMI_CLI_HAS_PREV_LINE_PRE_REDRAW:=0}"
+
+typeset -gi __KIMI_CLI_HAS_PREV_LINE_FINISH
+: "${__KIMI_CLI_HAS_PREV_LINE_FINISH:=0}"
+
+if (( ! ${+__KIMI_CLI_GUARD_WIDGET_ALIASES} )); then
+  typeset -gA __KIMI_CLI_GUARD_WIDGET_ALIASES=()
+fi
 
 # Preserve any previously defined handler so we can delegate if needed.
 if (( $+functions[command_not_found_handler] )); then
