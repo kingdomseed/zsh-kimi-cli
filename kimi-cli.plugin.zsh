@@ -22,6 +22,9 @@ typeset -gi __KIMI_CLI_HAS_PREV_LINE_PRE_REDRAW
 typeset -gi __KIMI_CLI_HAS_PREV_LINE_FINISH
 : "${__KIMI_CLI_HAS_PREV_LINE_FINISH:=0}"
 
+typeset -gi __KIMI_CLI_IN_PRE_REDRAW
+: "${__KIMI_CLI_IN_PRE_REDRAW:=0}"
+
 if (( ! ${+__KIMI_CLI_GUARD_WIDGET_ALIASES} )); then
   typeset -gA __KIMI_CLI_GUARD_WIDGET_ALIASES=()
 fi
@@ -137,6 +140,12 @@ __kimi_cli_line_init() {
 __kimi_cli_line_pre_redraw() {
   emulate -L zsh
 
+  if (( __KIMI_CLI_IN_PRE_REDRAW )); then
+    return
+  fi
+
+  __KIMI_CLI_IN_PRE_REDRAW=1
+  {
   if (( __KIMI_CLI_PREFIX_ACTIVE )); then
     local prefix="${__KIMI_CLI_PREFIX:-${__KIMI_CLI_PREFIX_CHAR} }"
     local prefix_len=${#prefix}
@@ -154,6 +163,9 @@ __kimi_cli_line_pre_redraw() {
   if (( __KIMI_CLI_HAS_PREV_LINE_PRE_REDRAW )); then
     zle __kimi_cli_prev_line_pre_redraw
   fi
+  } always {
+    __KIMI_CLI_IN_PRE_REDRAW=0
+  }
 }
 
 __kimi_cli_line_finish() {
